@@ -1,16 +1,13 @@
 #include <napi.h>
 #include "GetProcessesByName/getProcessesByName_main.hpp"
 #include "GetProcessWindowTitle/getProcessWindowTitle_main.hpp"
-
-/* Napi::Object Init(Napi::Env env, Napi::Object exports)
-{
-  exports.Set("getProcessesByName", Napi::Function::New(env, GetProcessesByNameWrap));
-  return exports;
-} */
+#include "SetProcessToForeground/setProcessToForeground_main.hpp"
 
 Napi::Object InitAll(Napi::Env env, Napi::Object exports)
 {
-  //Init(env, exports);
+  exports.Set(
+      Napi::String::New(env, "setProcessToForeground"),
+      Napi::Function::New(env, SetProcessToForegroundCallback));
   exports.Set(
       Napi::String::New(env, "getProcessesByName"),
       Napi::Function::New(env, GetProcessesByNameCallback));

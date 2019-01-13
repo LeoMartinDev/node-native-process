@@ -26,7 +26,21 @@ function getProcessWindowTitle(processId) {
     });
 };
 
+function setProcessToForeground(processId) {
+    return new Promise((resolve, reject) => {
+        try {
+            addon.setProcessToForeground(processId, function (error, result) {
+                if (error) return reject(error);
+                return resolve(result);
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
 module.exports = {
     getProcessesByName,
     getProcessWindowTitle,
+    setProcessToForeground,
 };

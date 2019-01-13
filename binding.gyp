@@ -9,6 +9,8 @@
             "src/cpp/GetProcessesByName/getProcessesByName_main.cc",
             "src/cpp/GetProcessWindowTitle/GetProcessWindowTitleWorker.cc",
             "src/cpp/GetProcessWindowTitle/getProcessWindowTitle_main.cc",
+            "src/cpp/SetProcessToForeground/SetProcessToForegroundWorker.cc",
+            "src/cpp/SetProcessToForeground/setProcessToForeground_main.cc",
             "src/cpp/main.cpp"
         ],
         'include_dirs': [

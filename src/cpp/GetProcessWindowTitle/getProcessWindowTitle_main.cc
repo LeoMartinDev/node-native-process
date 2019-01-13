@@ -22,7 +22,7 @@ void GetProcessWindowTitleCallback(const Napi::CallbackInfo &info)
     Napi::TypeError::New(env, "Invalid number of argument!").ThrowAsJavaScriptException();
     return;
   }
-  if (info.Length() < 1 || !info[0].IsString())
+  if (info.Length() < 1 || !info[0].IsNumber())
   {
     Napi::TypeError::New(env, "Argument 'processId' must be of type 'Number'!").ThrowAsJavaScriptException();
   }
