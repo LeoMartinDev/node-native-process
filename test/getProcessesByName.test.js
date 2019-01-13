@@ -1,24 +1,31 @@
 const assert = require('assert');
 const expect = require('chai').expect;
 const should = require('chai').should();
-const addon = require('../build/Release/testaddon.node');
+const addon = require('../index');
 
-describe('getProcessesByName', function() {
-    it('should fail - no arguments', function() {
-        expect(() => addon.getProcessesByName())
-            .to.throw();
+describe('getProcessesByName', function () {
+    it('should fail - no arguments', async function () {
+        try {
+            await addon.getProcessesByName()
+        } catch (error) {
+            expect(error).to.be.an('error');
+        }
     });
-    it('should fail - "processName" not a string', function() {
-        expect(() => addon.getProcessesByName(1, function (error, result) {}))
-            .to.throw();
+    it('should fail - "processName" not a string', async function () {
+        try {
+            await addon.getProcessesByName(1)
+        } catch (error) {
+            expect(error).to.be.an('error');
+        }
     });
-    it('should fail - "callback" not a function', function() {
-        expect(() => addon.getProcessesByName('node'))
-            .to.throw();
+    it('should return an array', async function () {
+            const pids = await addon.getProcessesByName('node.exe');
+
+            expect(pids).to.be.an('array');
     });
-    it('should return an array', function() {
-        addon.getProcessesByName('node', function (error, result) {
-            expect(result).to.be.a('array');
-        });
+    it('should find current pid', async function () {
+        const pids = await addon.getProcessesByName('node.exe');
+
+        expect(pids).to.include(process.pid);
     });
 });
