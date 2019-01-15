@@ -9,7 +9,13 @@
 #include <AtlBase.h>
 #include <AtlConv.h>
 
+struct t_HandleData {
+  unsigned long pid;
+  HWND handle;
+};
+
+BOOL IsMainWindow(HWND handle);
 BOOL CALLBACK EnumWindowsCallback(HWND hwnd, LPARAM lParam);
-HWND GetProcessWindowHandle(int processId);
+HWND GetProcessWindowHandle(int pid);
 
 #endif

@@ -2,23 +2,28 @@
 
 HWND g_HWND = NULL;
 
-BOOL CALLBACK EnumWindowsCallback(HWND hwnd, LPARAM lParam)
+BOOL IsMainWindow(HWND handle)
 {
-  DWORD lpdwProcessId;
-  GetWindowThreadProcessId(hwnd, &lpdwProcessId);
-  if (lpdwProcessId == lParam)
-  {
-    g_HWND = hwnd;
-    return FALSE;
-  }
-  return TRUE;
+  return GetWindow(handle, GW_OWNER) == (HWND)0 && IsWindowVisible(handle);
+}
+
+BOOL CALLBACK EnumWindowsCallback(HWND handle, LPARAM lParam)
+{
+  t_HandleData &data = *(t_HandleData *)lParam;
+  unsigned long pid = 0;
+  
+  GetWindowThreadProcessId(handle, &pid);
+  if (data.pid != pid || !IsMainWindow(handle))
+    return TRUE;
+  data.handle = handle;
+  return FALSE;
 }
 
 HWND GetProcessWindowHandle(int processId)
 {
-  EnumWindows(EnumWindowsCallback, processId);
-  HWND result = g_HWND;
-  g_HWND = NULL;
-
-  return result;
+  t_HandleData data;
+  data.pid = processId;
+  data.handle = 0;
+  EnumWindows(EnumWindowsCallback, (LPARAM)&data);
+  return data.handle;
 }
