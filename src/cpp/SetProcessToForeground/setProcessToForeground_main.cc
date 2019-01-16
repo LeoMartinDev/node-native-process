@@ -1,30 +1,48 @@
 #include "setProcessToForeground_main.hpp"
 
-bool SetProcessToForeground(int processId) {
-    HWND hWnd = GetProcessWindowHandle(processId);
+bool SetProcessToForeground(int processId)
+{
+  HWND hWnd = GetProcessWindowHandle(processId);
 
-    if (!IsWindow(hWnd)) {
-      return false;
+  if (!IsWindow(hWnd))
+  {
+    return false;
+  }
+  BYTE keyState[256] = {0};
+  //to unlock SetForegroundWindow we need to imitate Alt pressing
+  if (GetKeyboardState((LPBYTE)&keyState))
+  {
+    if (!(keyState[VK_MENU] & 0x80))
+    {
+      keybd_event(VK_MENU, 0, KEYEVENTF_EXTENDEDKEY | 0, 0);
     }
+  }
+  WINDOWPLACEMENT place;
+  memset(&place, 0, sizeof(WINDOWPLACEMENT));
+  place.length = sizeof(WINDOWPLACEMENT);
+  GetWindowPlacement(hWnd, &place);
 
-    BYTE keyState[256] = {0};
-    //to unlock SetForegroundWindow we need to imitate Alt pressing
-    if (GetKeyboardState((LPBYTE)&keyState))
+  switch (place.showCmd)
+  {
+  case SW_SHOWMAXIMIZED:
+    ShowWindow(hWnd, SW_SHOWMAXIMIZED);
+    break;
+  case SW_SHOWMINIMIZED:
+    ShowWindow(hWnd, SW_RESTORE);
+    break;
+  default:
+    ShowWindow(hWnd, SW_NORMAL);
+    break;
+  }
+  SetForegroundWindow(hWnd);
+  if (GetKeyboardState((LPBYTE)&keyState))
+  {
+    if (!(keyState[VK_MENU] & 0x80))
     {
-        if (!(keyState[VK_MENU] & 0x80))
-        {
-            keybd_event(VK_MENU, 0, KEYEVENTF_EXTENDEDKEY | 0, 0);
-        }
+      keybd_event(VK_MENU, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
     }
-    SetForegroundWindow(hWnd);
-    if (GetKeyboardState((LPBYTE)&keyState))
-    {
-        if (!(keyState[VK_MENU] & 0x80))
-        {
-            keybd_event(VK_MENU, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
-        }
-    }
-    return true;
+  }
+  return true;
 };
 
 void SetProcessToForegroundCallback(const Napi::CallbackInfo &info)
@@ -32,8 +50,8 @@ void SetProcessToForegroundCallback(const Napi::CallbackInfo &info)
   Napi::Env env = info.Env();
   int processId;
   Napi::Function callback;
-  SetProcessToForegroundWorker* worker;
-  
+  SetProcessToForegroundWorker *worker;
+
   if (info.Length() < 2)
   {
     Napi::TypeError::New(env, "Invalid number of argument!").ThrowAsJavaScriptException();
