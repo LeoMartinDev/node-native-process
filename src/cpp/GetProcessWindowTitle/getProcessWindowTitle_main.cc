@@ -25,6 +25,7 @@ void GetProcessWindowTitleCallback(const Napi::CallbackInfo &info)
   if (info.Length() < 1 || !info[0].IsNumber())
   {
     Napi::TypeError::New(env, "Argument 'processId' must be of type 'Number'!").ThrowAsJavaScriptException();
+    return;
   }
   if (!info[1].IsFunction())
   {
