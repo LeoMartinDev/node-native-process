@@ -6,8 +6,6 @@
 #include <cstdio>
 #include <iostream>
 #include <vector>
-#include <AtlBase.h>
-#include <AtlConv.h>
 
 struct t_HandleData {
   unsigned long pid;

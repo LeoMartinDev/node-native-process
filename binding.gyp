@@ -11,6 +11,8 @@
             "src/cpp/GetProcessWindowTitle/getProcessWindowTitle_main.cc",
             "src/cpp/SetProcessToForeground/SetProcessToForegroundWorker.cc",
             "src/cpp/SetProcessToForeground/setProcessToForeground_main.cc",
+            "src/cpp/GetForegroundWindowPid/getForegroundWindowPid_main.cc",
+            "src/cpp/GetForegroundWindowPid/GetForegroundWindowPidWorker.cc",
             "src/cpp/main.cpp"
         ],
         'include_dirs': [

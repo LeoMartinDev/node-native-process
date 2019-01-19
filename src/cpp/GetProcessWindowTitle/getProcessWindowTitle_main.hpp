@@ -2,6 +2,7 @@
 #define GET_PROCESS_WINDOW_TITLE_HPP
 
 #include <napi.h>
+#include <atlbase.h>
 #include "../shared/getProcessWindowHandle.hpp"
 #include "GetProcessWindowTitleWorker.hpp"
 

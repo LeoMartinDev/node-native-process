@@ -6,7 +6,9 @@ std::string GetProcessWindowTitle(int processId)
   const DWORD TITLE_SIZE = 1024;
   WCHAR windowTitle[TITLE_SIZE];
 
-  GetWindowTextW(windowHandle, windowTitle, TITLE_SIZE);
+  if (GetWindowTextW(windowHandle, windowTitle, TITLE_SIZE)) {
+    throw std::exception("GetProcessWindowTitle failed with error code " + GetLastError());
+  }
   return std::string(CW2A(windowTitle));
 }
 

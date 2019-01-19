@@ -5,6 +5,9 @@ std::vector<int> GetProcessesByName(const std::string &processName)
     PROCESSENTRY32 entry;
     entry.dwSize = sizeof(PROCESSENTRY32);
     HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
+    if (snapshot == INVALID_HANDLE_VALUE) {
+        throw std::exception("GetProcessesByName failed with code " + GetLastError());
+    }
     std::vector<int> pids;
 
     if (Process32First(snapshot, &entry) == TRUE)
@@ -12,23 +15,24 @@ std::vector<int> GetProcessesByName(const std::string &processName)
         while (Process32Next(snapshot, &entry) == TRUE)
         {
             if (stricmp(entry.szExeFile, processName.c_str()) == 0)
-            {  
+            {
                 pids.push_back(entry.th32ProcessID);
             }
         }
     }
-
-  CloseHandle(snapshot);
-  return pids;
+    CloseHandle(snapshot);
+    return pids;
 }
 
-void GetProcessesByNameCallback(const Napi::CallbackInfo& info) {
+void GetProcessesByNameCallback(const Napi::CallbackInfo &info)
+{
     Napi::Env env = info.Env();
     std::string processName;
     Napi::Function callback;
-    GetProcessesByNameWorker* worker;
+    GetProcessesByNameWorker *worker;
 
-    if (info.Length() < 2) {
+    if (info.Length() < 2)
+    {
         Napi::TypeError::New(env, "Invalid number of argument!").ThrowAsJavaScriptException();
         return;
     }
@@ -37,12 +41,13 @@ void GetProcessesByNameCallback(const Napi::CallbackInfo& info) {
         Napi::TypeError::New(env, "Argument 'processName' must be of type 'String'!").ThrowAsJavaScriptException();
         return;
     }
-    if (!info[1].IsFunction()) {
+    if (!info[1].IsFunction())
+    {
         Napi::TypeError::New(env, "Argument 'callback' must be of type 'Function'!").ThrowAsJavaScriptException();
         return;
     }
     processName = info[0].As<Napi::String>();
     callback = info[1].As<Napi::Function>();
-    worker = new GetProcessesByNameWorker(callback, processName); 
+    worker = new GetProcessesByNameWorker(callback, processName);
     worker->Queue();
 }
