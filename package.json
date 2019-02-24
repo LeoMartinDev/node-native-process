@@ -1,12 +1,12 @@
 {
   "name": "native-process",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "",
   "main": "index.js",
   "scripts": {
     "build": "node-gyp rebuild",
     "clean": "node-gyp clean",
-    "test": "./node_modules/.bin/mocha"
+    "test": "./node_modules/.bin/mocha test/*.test.js"
   },
   "keywords": [],
   "author": "",
@@ -15,7 +15,9 @@
     "node-addon-api": "^1.6.2"
   },
   "devDependencies": {
+    "async": "^2.6.1",
     "chai": "^4.2.0",
+    "electron": "^4.0.1",
     "mocha": "^5.2.0"
   }
 }

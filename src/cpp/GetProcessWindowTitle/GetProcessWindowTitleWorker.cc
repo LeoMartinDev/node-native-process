@@ -7,7 +7,14 @@ GetProcessWindowTitleWorker::~GetProcessWindowTitleWorker() {}
 
 void GetProcessWindowTitleWorker::Execute()
 {
-  this->result = GetProcessWindowTitle(this->processId);
+  try
+  {
+    this->result = GetProcessWindowTitle(this->processId);
+  }
+  catch (const std::exception &error)
+  {
+    this->SetError(error.what());
+  }
 }
 
 void GetProcessWindowTitleWorker::OnOK()
